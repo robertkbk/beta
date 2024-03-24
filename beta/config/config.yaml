@@ -1,0 +1,45 @@
+defaults:
+  - _self_
+  - beta
+
+data:
+  _target_: beta.data.BetaDataModule
+  batch_size: 2
+  shuffle: true
+  split: 0.80
+
+  dataset:
+    _target_: beta.data.BetaDataset
+    lookback: 5
+    subset: 180
+
+    series:
+      _target_: beta.data.BetaSeries
+      window: 150
+      stock: ${experiment.dataset_dir}/${experiment.stock_dir}/${experiment.stock_name}.txt
+      index: ${experiment.dataset_dir}/${experiment.index_dir}/${experiment.index_name}.txt
+
+      rates:
+        _target_: beta.data.rates.Daily
+
+predictor:
+  _target_: beta.model.BetaPredictor
+  lr: 0.0001
+
+  model:
+    _target_: beta.model.nn.BetaModel
+    input_size: 1
+    hidden_size: 48
+    num_layers: 8
+    dropout: 0.02
+
+experiment:
+  dataset_dir: "../dataset/stooq/data/daily/pl"
+  stock_dir: "wse stocks"
+  stock_name: ale
+  index_dir: "wse indices"
+  index_name: wig
+
+  min_epochs: 150
+  max_epochs: 1500
+  dev_run: false
