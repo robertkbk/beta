@@ -1,2 +1,2 @@
-from . import nn
-from .module import BetaPredictor
+from . import nn as nn
+from .module import BetaPredictor as BetaPredictor

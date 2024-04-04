@@ -18,9 +18,9 @@ def main(config: Config):
     logger = TensorBoardLogger(save_dir="logs", name="beta")
 
     trainer = pl.Trainer(
-        fast_dev_run=config.experiment.dev_run,
-        min_epochs=config.experiment.min_epochs,
-        max_epochs=config.experiment.max_epochs,
+        fast_dev_run=config.run.dev,
+        min_epochs=config.run.min_epochs,
+        max_epochs=config.run.max_epochs,
         logger=logger,
         check_val_every_n_epoch=10,
         callbacks=[
@@ -28,7 +28,6 @@ def main(config: Config):
                 monitor="val/loss",
                 mode="min",
                 patience=10,
-                verbose=True,
             ),
             callbacks.ModelCheckpoint(
                 "logs/model",

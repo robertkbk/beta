@@ -1,1 +1,1 @@
-from .model import BetaModel
+from .model import BetaModel as BetaModel

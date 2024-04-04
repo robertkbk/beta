@@ -166,3 +166,4 @@ outputs/
 lightning_logs/
 mlruns/
 logs/
+data/

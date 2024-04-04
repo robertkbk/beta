@@ -1,23 +1,20 @@
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
 
 from hydra.core.config_store import ConfigStore
 
 
 @dataclass
 class Series:
-    window: int
-    stock: Path
     index: Path
-    rates: Any
+    stock: Path
 
 
 @dataclass
 class Dataset:
     lookback: int
-    subset: int | None
     series: Series
+    subset: int | None
 
 
 @dataclass
@@ -43,22 +40,27 @@ class Predictor:
 
 
 @dataclass
+class Run:
+    dev: bool
+    min_epochs: int
+    max_epochs: int
+
+
+@dataclass
 class Experiment:
     dataset_dir: Path
     stock_dir: str
     stock_name: str
     index_dir: str
     index_name: str
-    min_epochs: int
-    max_epochs: int
-    dev_run: bool
 
 
 @dataclass
 class Config:
     data: Data
-    predictor: Predictor
     experiment: Experiment
+    predictor: Predictor
+    run: Run
 
 
 ConfigStore.instance().store(name="beta", node=Config)
