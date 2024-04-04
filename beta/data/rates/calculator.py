@@ -1,7 +1,13 @@
 import abc
+from enum import Enum
 
 import numpy as np
 import pandas as pd
+
+
+class ReturnRate(str, Enum):
+    LOG = "log"
+    SIMPLE = "simple"
 
 
 def _log_return_rate(series: pd.Series) -> float:
@@ -13,21 +19,34 @@ def _simple_return_rate(series: pd.Series) -> float:
 
 
 class RatesCalculator(abc.ABC):
+    def __init__(self, rate: ReturnRate) -> None:
+        super().__init__()
+
+        match rate:
+            case ReturnRate.LOG:
+                self._rate_calc = _log_return_rate
+
+            case ReturnRate.SIMPLE:
+                self._rate_calc = _simple_return_rate
+
+            case _:
+                raise ValueError(f"invalid return rate {rate}")
+
     @abc.abstractmethod
     def calculate(self, series: pd.Series) -> pd.Series: ...
 
 
 class Daily(RatesCalculator):
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, rate: ReturnRate) -> None:
+        super().__init__(rate)
 
     def calculate(self, series: pd.Series) -> pd.Series:
-        return series.rolling(2).apply(_log_return_rate).dropna()
+        return series.rolling(2).apply(self._rate_calc).dropna()
 
 
 class Weekly(RatesCalculator):
-    def __init__(self, day: int) -> None:
-        super().__init__()
+    def __init__(self, rate: ReturnRate, day: int) -> None:
+        super().__init__(rate)
 
         if not (0 <= day <= 4):
             raise ValueError(f"invalid value of day: {day} (should be in range [0; 4])")
@@ -40,6 +59,23 @@ class Weekly(RatesCalculator):
         return (
             filled_series[filled_series.index.weekday == self._day]
             .rolling(2)
-            .apply(_log_return_rate)
+            .apply(self._rate_calc)
             .dropna()
         )
+
+
+class Monthly(RatesCalculator):
+    def __init__(self, start: bool) -> None:
+        super().__init__()
+        self._use_start = start
+
+    def calculate(self, series: pd.Series) -> pd.Series:
+        filled_series = series.resample("1D").ffill()
+
+        date_mask = (
+            filled_series.index.is_month_start
+            if self._use_start
+            else filled_series.index.is_month_end
+        )
+
+        return filled_series[date_mask].rolling(2).apply(self._rate_calc).dropna()

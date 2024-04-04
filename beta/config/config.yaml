@@ -10,17 +10,20 @@ data:
 
   dataset:
     _target_: beta.data.BetaDataset
-    lookback: 5
-    subset: 180
+    lookback: 25
+    subset: null
 
     series:
       _target_: beta.data.BetaSeries
-      window: 150
       stock: ${experiment.dataset_dir}/${experiment.stock_dir}/${experiment.stock_name}.txt
       index: ${experiment.dataset_dir}/${experiment.index_dir}/${experiment.index_name}.txt
-
       rates:
         _target_: beta.data.rates.Daily
+        rate: log
+
+      beta:
+        _target_: beta.data.beta.Rolling
+        window: 150
 
 predictor:
   _target_: beta.model.BetaPredictor
@@ -34,12 +37,13 @@ predictor:
     dropout: 0.02
 
 experiment:
-  dataset_dir: "../dataset/stooq/data/daily/pl"
+  dataset_dir: data/daily/pl
   stock_dir: "wse stocks"
   stock_name: ale
   index_dir: "wse indices"
   index_name: wig
 
+run:
+  dev: false
   min_epochs: 150
   max_epochs: 1500
-  dev_run: false

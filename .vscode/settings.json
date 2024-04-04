@@ -1,6 +1,7 @@
 {
-  "python.formatting.provider": "black",
   "editor.formatOnSave": true,
   "python.analysis.autoImportCompletions": true,
-  "python.analysis.typeCheckingMode": "off"
+  "python.analysis.typeCheckingMode": "off",
+  "python.analysis.completeFunctionParens": true,
+  "jupyter.notebookFileRoot": "."
 }
