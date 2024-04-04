@@ -1,0 +1,32 @@
+import abc
+
+import pandas as pd
+
+
+class BetaCalculator(abc.ABC):
+    @abc.abstractmethod
+    def calculate(rri: pd.Series, rrs: pd.Series) -> pd.Series: ...
+
+
+class Rolling(BetaCalculator):
+    def __init__(self, window: int) -> None:
+        super().__init__()
+        self._window = window
+
+    def calculate(self, rri: pd.Series, rrs: pd.Series) -> pd.Series:
+        stock_cov = rrs.rolling(self._window).apply(lambda rrs: rrs.cov(rri))
+        index_var = rri.rolling(self._window).var()
+
+        return (stock_cov / index_var).dropna()
+
+
+class Expanding(BetaCalculator):
+    def __init__(self, min_periods: int) -> None:
+        super().__init__()
+        self._min_periods = min_periods
+
+    def calculate(self, rri: pd.Series, rrs: pd.Series) -> pd.Series:
+        stock_cov = rrs.expanding(self._min_periods).apply(lambda rrs: rrs.cov(rri))
+        index_var = rri.expanding(self._min_periods).var()
+
+        return (stock_cov / index_var).dropna()

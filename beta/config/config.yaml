@@ -37,7 +37,7 @@ predictor:
     dropout: 0.02
 
 experiment:
-  dataset_dir: data/daily/pl
+  dataset_dir: dataset/daily/pl
   stock_dir: "wse stocks"
   stock_name: ale
   index_dir: "wse indices"
