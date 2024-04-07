@@ -22,7 +22,7 @@ data:
         rate: log
 
       beta:
-        _target_: beta.data.beta.Rolling
+        _target_: beta.data.index.Rolling
         window: 150
 
 predictor:

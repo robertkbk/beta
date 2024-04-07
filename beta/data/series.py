@@ -18,7 +18,7 @@ def _read_series(path: Path) -> pd.DataFrame:
     )
 
 
-class BetaSeries:
+class BetaSeries(pd.Series):
     def __init__(
         self,
         stock: Path,
@@ -33,4 +33,4 @@ class BetaSeries:
         stock_rr = rates.calculate(stock_series[_COL_STOCK])
 
         series = beta.calculate(index_rr, stock_rr)
-        self.values = series.values
+        super().__init__(series)
