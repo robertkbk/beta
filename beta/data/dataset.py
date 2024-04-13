@@ -7,28 +7,29 @@ from .series import BetaSeries
 class BetaDataset(Dataset):
     def __init__(
         self,
-        series: BetaSeries,
+        series: list[BetaSeries],
         lookback: int,
         subset: int | None,
         dtype: torch.dtype = torch.float,
     ) -> None:
         super().__init__()
 
-        beta = series.values
+        beta = series[0].values
         if subset is not None:
             beta = beta[-subset:]
 
-        beta_series = torch.tensor(beta, dtype=dtype)
+        beta_tensor = torch.tensor(beta, dtype=dtype)
 
-        if len(beta_series.shape) <= 1:
-            beta_series = beta_series.reshape(-1, 1)
+        if beta_tensor.ndim <= 1:
+            beta_tensor.unsqueeze_(1)
 
-        self._dataset = beta_series.unfold(0, lookback, 1)
+        self._dataset = beta_tensor.unfold(0, lookback, 1).mT
+        self.series = series
 
     def __getitem__(self, index: int) -> tuple[torch.Tensor, torch.Tensor]:
         return (
-            self._dataset[index].T,
-            self._dataset[index + 1].T,
+            self._dataset[index],
+            self._dataset[index + 1],
         )
 
     def __len__(self) -> int:
