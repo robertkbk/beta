@@ -35,6 +35,7 @@ predictor:
     hidden_size: 48
     num_layers: 8
     dropout: 0.02
+    lookback: ${data.dataset.lookback}
 
 experiment:
   dataset_dir: dataset/daily/pl
