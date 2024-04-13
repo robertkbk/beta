@@ -64,6 +64,21 @@ class Weekly(RatesCalculator):
         )
 
 
+class InterWeekly(RatesCalculator):
+    def __init__(self, rate: ReturnRate) -> None:
+        super().__init__(rate)
+
+    def calculate(self, series: pd.Series) -> pd.Series:
+        series_filled = series.resample("1D").ffill()
+        mask_iw = series_filled.index.weekday.isin((0, 4))
+        series_iw = series_filled[mask_iw]
+
+        if series_iw.index[0].weekday() == 4:
+            series_iw = series_iw[1:]
+
+        return series_iw.rolling(2, step=2).apply(self._rate_calc).dropna()
+
+
 class Monthly(RatesCalculator):
     def __init__(self, start: bool) -> None:
         super().__init__()
