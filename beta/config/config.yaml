@@ -14,16 +14,17 @@ data:
     subset: null
 
     series:
-      _target_: beta.data.BetaSeries
-      stock: ${experiment.dataset_dir}/${experiment.stock_dir}/${experiment.stock_name}.txt
-      index: ${experiment.dataset_dir}/${experiment.index_dir}/${experiment.index_name}.txt
-      rates:
-        _target_: beta.data.rates.Daily
-        rate: log
+      - _target_: beta.data.BetaSeries
+        stock: ${experiment.dataset_dir}/${experiment.stock_dir}/${experiment.stock_name}.txt
+        index: ${experiment.dataset_dir}/${experiment.index_dir}/${experiment.index_name}.txt
+        column: <CLOSE>
+        rates:
+          _target_: beta.data.rates.Daily
+          rate: log
 
-      beta:
-        _target_: beta.data.index.Rolling
-        window: 150
+        beta:
+          _target_: beta.data.index.Rolling
+          window: 150
 
 predictor:
   _target_: beta.model.BetaPredictor

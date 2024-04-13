@@ -14,7 +14,7 @@ class Series:
 @dataclass
 class Dataset:
     lookback: int
-    series: Series
+    series: list[Series]
     subset: int | None
 
 
