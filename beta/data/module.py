@@ -9,13 +9,11 @@ class BetaDataModule(pl.LightningDataModule):
         self, dataset: BetaDataset, batch_size: int, shuffle: bool, split: float
     ) -> None:
         super().__init__()
-        self._dataset = dataset
         self._shuffle = shuffle
         self._batch_size = batch_size
         self._split_idx = int(len(dataset) * split)
 
-    def setup(self, stage: str) -> None:
-        return super().setup(stage)
+        self.dataset = dataset
 
     def train_dataloader(self) -> data.DataLoader:
         indices = [*range(self._split_idx)]
@@ -26,14 +24,14 @@ class BetaDataModule(pl.LightningDataModule):
         )
 
         return data.DataLoader(
-            dataset=self._dataset,
+            dataset=self.dataset,
             batch_size=self._batch_size,
             sampler=sampler,
         )
 
     def val_dataloader(self) -> data.DataLoader:
         return data.DataLoader(
-            dataset=self._dataset,
+            dataset=self.dataset,
             batch_size=self._batch_size,
-            sampler=range(self._split_idx, len(self._dataset)),
+            sampler=range(self._split_idx, len(self.dataset)),
         )

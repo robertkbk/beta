@@ -8,6 +8,7 @@ from hydra.core.config_store import ConfigStore
 class Series:
     index: Path
     stock: Path
+    column: str
 
 
 @dataclass

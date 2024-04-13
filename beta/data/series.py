@@ -6,13 +6,12 @@ from .rates import RatesCalculator
 from .index import BetaCalculator
 
 _COL_DATE = "<DATE>"
-_COL_STOCK = "<CLOSE>"
 
 
-def _read_series(path: Path) -> pd.DataFrame:
+def _read_series(path: Path, column: str) -> pd.DataFrame:
     return pd.read_csv(
         path,
-        usecols=[_COL_DATE, _COL_STOCK],
+        usecols=[_COL_DATE, column],
         parse_dates=[_COL_DATE],
         index_col=_COL_DATE,
     )
@@ -23,14 +22,15 @@ class BetaSeries(pd.Series):
         self,
         stock: Path,
         index: Path,
+        column: str,
         rates: RatesCalculator,
         beta: BetaCalculator,
     ) -> None:
-        index_series = _read_series(index)
-        index_rr = rates.calculate(index_series[_COL_STOCK])
+        index_series = _read_series(index, column)
+        index_rr = rates.calculate(index_series[column])
 
-        stock_series = _read_series(stock)
-        stock_rr = rates.calculate(stock_series[_COL_STOCK])
+        stock_series = _read_series(stock, column)
+        stock_rr = rates.calculate(stock_series[column])
 
         series = beta.calculate(index_rr, stock_rr)
         super().__init__(series)
