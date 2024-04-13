@@ -9,11 +9,21 @@ class BetaPredictor(pl.LightningModule):
     def __init__(self, model: BetaModel, lr: float) -> None:
         super().__init__()
         self._lr = lr
+        self._loss = nn.SmoothL1Loss()
 
         self.model = model
-        self.mse = torchmetrics.MeanSquaredError()
-        self.mae = torchmetrics.MeanAbsoluteError()
-        self.md = torchmetrics.MinkowskiDistance(p=2)
+
+        self._train_metrics = torchmetrics.MetricCollection(
+            {"mse": torchmetrics.MeanSquaredError()}, prefix="train/"
+        )
+        self._val_metrics = torchmetrics.MetricCollection(
+            {
+                "mae": torchmetrics.MeanAbsoluteError(),
+                "mse": torchmetrics.MeanSquaredError(),
+                "md": torchmetrics.MinkowskiDistance(p=2.0),
+            },
+            prefix="val/",
+        )
 
     def configure_optimizers(self):
         optimizer = optim.AdamW(self.model.parameters(), lr=self._lr)
@@ -29,37 +39,31 @@ class BetaPredictor(pl.LightningModule):
         x, y = batch
         pred = self.model.forward(x)
 
-        loss = nn.functional.l1_loss(pred, y)
+        loss = self._loss.forward(pred, y)
         self.log("train/loss", loss)
 
-        self.mse.forward(pred, y)
-        self.mae.forward(pred, y)
-        self.md.forward(pred, y)
+        self._train_metrics.update(pred, y)
+        self.log_dict(self._train_metrics)
 
         return loss
 
     def on_train_epoch_end(self) -> None:
-        self.log("train/mse", self.mse)
-        self.log("train/mae", self.mae)
-        self.log("train/md", self.md)
+        self.log_dict(self._train_metrics)
 
     def validation_step(self, batch: list[Tensor]) -> Tensor:
         x, y = batch
         pred = self.model.forward(x)
 
-        loss = nn.functional.mse_loss(pred, y)
+        loss = self._loss.forward(pred, y)
         self.log("val/loss", loss)
 
-        self.mse.forward(pred, y)
-        self.mae.forward(pred, y)
-        self.md.forward(pred, y)
+        self._val_metrics.update(pred, y)
+        self.log_dict(self._val_metrics)
 
         return loss
 
     def on_validation_epoch_end(self) -> None:
-        self.log("val/mse", self.mse)
-        self.log("val/mae", self.mae)
-        self.log("val/lce", self.md)
+        self.log_dict(self._val_metrics)
 
     def predict_step(self, batch: list[Tensor]) -> Tensor:
         pred = self.model.forward(batch[0])
