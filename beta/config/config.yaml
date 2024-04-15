@@ -20,7 +20,7 @@ data:
         column: <CLOSE>
         rates:
           _target_: beta.data.rates.Daily
-          rate: log
+          rate: LOG
 
         beta:
           _target_: beta.data.index.Rolling
@@ -32,7 +32,7 @@ data:
         column: <CLOSE>
         rates:
           _target_: beta.data.rates.Daily
-          rate: log
+          rate: LOG
 
         beta:
           _target_: beta.data.index.Rolling
