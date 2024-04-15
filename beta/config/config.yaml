@@ -26,17 +26,29 @@ data:
           _target_: beta.data.index.Rolling
           window: 150
 
+      - _target_: beta.data.BetaSeries
+        stock: ${experiment.dataset_dir}/${experiment.stock_dir}/${experiment.stock_name}.txt
+        index: ${experiment.dataset_dir}/${experiment.index_dir}/${experiment.index_name}.txt
+        column: <CLOSE>
+        rates:
+          _target_: beta.data.rates.Daily
+          rate: log
+
+        beta:
+          _target_: beta.data.index.Rolling
+          window: 75
+
 predictor:
   _target_: beta.model.BetaPredictor
   lr: 0.0001
 
   model:
     _target_: beta.model.nn.BetaModel
-    input_size: 1
+    input_size: ${len:${data.dataset.series}}
+    lookback: ${data.dataset.lookback}
     hidden_size: 48
     num_layers: 8
     dropout: 0.02
-    lookback: ${data.dataset.lookback}
 
 experiment:
   dataset_dir: dataset/daily/pl
