@@ -49,18 +49,8 @@ class Run:
 
 
 @dataclass
-class Experiment:
-    dataset_dir: Path
-    stock_dir: str
-    stock_name: str
-    index_dir: str
-    index_name: str
-
-
-@dataclass
 class Config:
     data: Data
-    experiment: Experiment
     predictor: Predictor
     run: Run
 

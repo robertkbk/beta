@@ -15,8 +15,8 @@ data:
 
     series:
       - _target_: beta.data.BetaSeries
-        stock: ${experiment.dataset_dir}/${experiment.stock_dir}/${experiment.stock_name}.txt
-        index: ${experiment.dataset_dir}/${experiment.index_dir}/${experiment.index_name}.txt
+        stock: dataset/daily/pl/wse stocks/ale.txt
+        index: dataset/daily/pl/wse indices/wig.txt
         column: <CLOSE>
         rates:
           _target_: beta.data.rates.Daily
@@ -27,8 +27,8 @@ data:
           window: 150
 
       - _target_: beta.data.BetaSeries
-        stock: ${experiment.dataset_dir}/${experiment.stock_dir}/${experiment.stock_name}.txt
-        index: ${experiment.dataset_dir}/${experiment.index_dir}/${experiment.index_name}.txt
+        stock: dataset/daily/pl/wse stocks/ale.txt
+        index: dataset/daily/pl/wse indices/wig.txt
         column: <CLOSE>
         rates:
           _target_: beta.data.rates.Daily
@@ -49,13 +49,6 @@ predictor:
     hidden_size: 48
     num_layers: 8
     dropout: 0.02
-
-experiment:
-  dataset_dir: dataset/daily/pl
-  stock_dir: "wse stocks"
-  stock_name: ale
-  index_dir: "wse indices"
-  index_name: wig
 
 run:
   dev: false
