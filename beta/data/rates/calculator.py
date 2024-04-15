@@ -57,10 +57,10 @@ class Weekly(RatesCalculator):
         self._day = day
 
     def calculate(self, series: pd.Series) -> pd.Series:
-        filled_series = series.resample("1D").ffill()
+        series_filled = series.resample("1D").ffill()
 
         return (
-            filled_series[filled_series.index.weekday == self._day]
+            series_filled[series_filled.index.weekday == self._day]
             .rolling(2)
             .apply(self._rate_calc)
             .dropna()
@@ -88,12 +88,12 @@ class Monthly(RatesCalculator):
         self._use_start = start
 
     def calculate(self, series: pd.Series) -> pd.Series:
-        filled_series = series.resample("1D").ffill()
+        series_filled = series.resample("1D").ffill()
 
         date_mask = (
-            filled_series.index.is_month_start
+            series_filled.index.is_month_start
             if self._use_start
-            else filled_series.index.is_month_end
+            else series_filled.index.is_month_end
         )
 
-        return filled_series[date_mask].rolling(2).apply(self._rate_calc).dropna()
+        return series_filled[date_mask].rolling(2).apply(self._rate_calc).dropna()
