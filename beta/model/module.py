@@ -10,20 +10,24 @@ class BetaPredictor(pl.LightningModule):
         super().__init__()
         self._lr = lr
         self._loss = nn.SmoothL1Loss()
-
-        self.model = model
-
         self._train_metrics = torchmetrics.MetricCollection(
-            {"mse": torchmetrics.MeanSquaredError()}, prefix="train/"
+            {
+                "mse": torchmetrics.MeanSquaredError(),
+                "mape": torchmetrics.MeanAbsolutePercentageError(),
+            },
+            prefix="train/",
         )
         self._val_metrics = torchmetrics.MetricCollection(
             {
                 "mae": torchmetrics.MeanAbsoluteError(),
-                "mse": torchmetrics.MeanSquaredError(),
-                "md": torchmetrics.MinkowskiDistance(p=2.0),
+                "mape": torchmetrics.MeanAbsolutePercentageError(),
+                "smape": torchmetrics.SymmetricMeanAbsolutePercentageError(),
+                "wmape": torchmetrics.WeightedMeanAbsolutePercentageError(),
             },
             prefix="val/",
         )
+
+        self.model = model
 
     def configure_optimizers(self):
         optimizer = optim.AdamW(self.model.parameters(), lr=self._lr)
