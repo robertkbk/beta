@@ -14,17 +14,17 @@ class BetaDataset(Dataset):
     ) -> None:
         super().__init__()
 
-        beta = series[0].values
-        if subset is not None:
-            beta = beta[-subset:]
-
-        beta_tensor = torch.tensor(beta, dtype=dtype)
+        beta_series = pd.concat(series, axis=1).dropna()
+        beta_tensor = torch.tensor(beta_series.values, dtype=dtype)
 
         if beta_tensor.ndim <= 1:
             beta_tensor.unsqueeze_(1)
 
+        if subset is not None:
+            beta_tensor = beta_tensor[-subset:]
+
         self._dataset = beta_tensor.unfold(0, lookback, 1).mT
-        self.series = series
+        self.series = beta_series
 
     def __getitem__(self, index: int) -> tuple[torch.Tensor, torch.Tensor]:
         return (

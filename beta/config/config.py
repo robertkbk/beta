@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from hydra.core.config_store import ConfigStore
+from omegaconf import OmegaConf
 
 
 @dataclass
@@ -64,4 +65,5 @@ class Config:
     run: Run
 
 
+OmegaConf.register_new_resolver("len", len)
 ConfigStore.instance().store(name="beta", node=Config)
