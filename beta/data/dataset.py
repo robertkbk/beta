@@ -1,3 +1,5 @@
+from matplotlib.figure import Figure
+import pandas as pd
 import torch
 from torch.utils.data import Dataset
 
@@ -34,3 +36,7 @@ class BetaDataset(Dataset):
 
     def __len__(self) -> int:
         return len(self._dataset) - 1
+
+    def plot(self, *args, **kwargs) -> Figure:
+        ax = self.series.plot.line(*args, **kwargs)
+        return ax.get_figure()

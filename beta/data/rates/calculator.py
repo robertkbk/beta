@@ -32,6 +32,9 @@ class RatesCalculator(abc.ABC):
             case _:
                 raise ValueError(f"invalid return rate {rate}")
 
+    def __str__(self) -> str:
+        return f"{type(self).__name__}"
+
     @abc.abstractmethod
     def calculate(self, series: pd.Series) -> pd.Series: ...
 
