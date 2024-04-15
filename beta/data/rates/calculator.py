@@ -5,17 +5,17 @@ import numpy as np
 import pandas as pd
 
 
-class ReturnRate(str, Enum):
-    LOG = "log"
-    SIMPLE = "simple"
-
-
 def _log_return_rate(series: pd.Series) -> float:
     return float(np.log(series.iloc[0]) - np.log(series.iloc[-1]))
 
 
 def _simple_return_rate(series: pd.Series) -> float:
     return float((series.iloc[0] - series.iloc[-1]) / series.iloc[0])
+
+
+class ReturnRate(str, Enum):
+    LOG = "LOG"
+    SIMPLE = "SIMPLE"
 
 
 class RatesCalculator(abc.ABC):
