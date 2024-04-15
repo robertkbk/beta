@@ -33,4 +33,4 @@ class BetaSeries(pd.Series):
         stock_rr = rates.calculate(stock_series[column])
 
         series = beta.calculate(index_rr, stock_rr)
-        super().__init__(series)
+        super().__init__(data=series, name=f"{rates} {beta}")
