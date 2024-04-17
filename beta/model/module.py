@@ -20,6 +20,7 @@ class BetaPredictor(pl.LightningModule):
         self.metrics_val = torchmetrics.MetricCollection(
             {
                 "mae": torchmetrics.MeanAbsoluteError(),
+                "mse": torchmetrics.MeanSquaredError(),
                 "mape": torchmetrics.MeanAbsolutePercentageError(),
                 "smape": torchmetrics.SymmetricMeanAbsolutePercentageError(),
                 "wmape": torchmetrics.WeightedMeanAbsolutePercentageError(),
