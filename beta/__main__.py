@@ -33,6 +33,8 @@ def main(config: Config):
                 monitor="val/loss",
                 save_weights_only=True,
             ),
+            callbacks.LearningRateMonitor("epoch"),
+            callbacks.LearningRateFinder(min_lr=1e-6, max_lr=1e-1),
         ],
     )
 
