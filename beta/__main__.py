@@ -15,11 +15,11 @@ def main(config: Config):
     logger = loggers.TensorBoardLogger(save_dir="logs", name="beta")
 
     trainer = pl.Trainer(
+        logger=logger,
+        check_val_every_n_epoch=5,
         fast_dev_run=config.run.dev,
         min_epochs=config.run.min_epochs,
         max_epochs=config.run.max_epochs,
-        logger=logger,
-        check_val_every_n_epoch=10,
         callbacks=[
             callbacks.EarlyStopping(
                 monitor="val/loss",
@@ -34,6 +34,7 @@ def main(config: Config):
             ),
             callbacks.LearningRateMonitor("epoch"),
             callbacks.LearningRateFinder(min_lr=1e-6, max_lr=1e-1),
+            callbacks.TQDMProgressBar(refresh_rate=10),
         ],
     )
 
