@@ -1,7 +1,6 @@
 import hydra
 import lightning as pl
 import matplotlib.pyplot as plt
-import scienceplots
 from lightning.pytorch import callbacks, loggers
 
 from .config import Config
@@ -38,10 +37,26 @@ def main(config: Config):
         ],
     )
 
-    logger.experiment.add_figure("dataset", datamodule.dataset.plot(xlabel=""))
+    dataset_fig = datamodule.dataset.plot(xlabel="", figsize=(8, 6))
+    logger.experiment.add_figure("dataset", dataset_fig)
+
     trainer.fit(model=predictor, datamodule=datamodule)
+
+    pred = trainer.predict(
+        model=predictor,
+        datamodule=datamodule,
+        return_predictions=True,
+        ckpt_path="best",
+    )
+
+    pred_figs = datamodule.dataset.plot_prediction(pred, xlabel="", figsize=(8, 6))
+
+    for i, fig in enumerate(pred_figs):
+        logger.experiment.add_figure(f"prediction/{i}", fig)
 
 
 if __name__ == "__main__":
-    plt.style.use(["science", "no-latex"])
+    import scienceplots
+
+    plt.style.use(["science", "no-latex", "grid"])
     main()

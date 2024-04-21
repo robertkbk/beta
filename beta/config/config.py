@@ -23,6 +23,7 @@ class Dataset:
 class Data:
     dataset: Dataset
     batch_size: int
+    predict: int
     shuffle: bool
     split: float
 

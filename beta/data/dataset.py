@@ -1,6 +1,6 @@
-from matplotlib.figure import Figure
 import pandas as pd
 import torch
+from matplotlib.figure import Figure
 from torch.utils.data import Dataset
 
 from .series import BetaSeries
@@ -40,3 +40,31 @@ class BetaDataset(Dataset):
     def plot(self, *args, **kwargs) -> Figure:
         ax = self.series.plot.line(*args, **kwargs)
         return ax.get_figure()
+
+    def _build_pred_df(
+        self, column: int, data: torch.Tensor, pred_len: int
+    ) -> pd.DataFrame:
+        y = self.series.iloc[:, column][-pred_len:]
+        pred = pd.Series(
+            data=data, index=self.series.index[-pred_len:], name="Prediction"
+        )
+
+        return pd.concat([y, pred], axis=1)
+
+    def plot_prediction(
+        self, pred_batch: list[torch.Tensor], *args, **kwargs
+    ) -> list[Figure]:
+        pred = torch.concat(pred_batch)
+        pred_len = len(pred)
+        pred_index = self.series.index[-pred_len:]
+        pred_df = pd.DataFrame(pred, index=pred_index, columns=self.series.columns)
+        pred_ax = pred_df.plot.line(*args, **kwargs)
+
+        pred_col_ax = [
+            self._build_pred_df(column, pred_col, pred_len)
+            .plot.line(*args, **kwargs)
+            .get_figure()
+            for column, pred_col in enumerate(pred.unbind(dim=1))
+        ]
+
+        return [pred_ax.get_figure(), *pred_col_ax]
