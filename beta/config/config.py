@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Literal
 
 from hydra.core.config_store import ConfigStore
 from omegaconf import OmegaConf
@@ -9,7 +10,7 @@ from omegaconf import OmegaConf
 class Series:
     index: Path
     stock: Path
-    column: str
+    column: Literal["<OPEN>", "<HIGH>", "<LOW>", "<CLOSE>"]
 
 
 @dataclass
