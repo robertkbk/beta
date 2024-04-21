@@ -40,10 +40,14 @@ class RatesCalculator(abc.ABC):
 
 
 class Daily(RatesCalculator):
-    def __init__(self, rate: ReturnRate) -> None:
+    def __init__(self, rate: ReturnRate, fill: bool = False) -> None:
         super().__init__(rate)
+        self._fill = fill
 
     def calculate(self, series: pd.Series) -> pd.Series:
+        if self._fill:
+            series = series.resample("1D").ffill().where(lambda ser: ser.weekday < 5)
+
         return series.rolling(2).apply(self._rate_calc).dropna()
 
 
