@@ -1,4 +1,5 @@
 import abc
+from datetime import date
 
 import pandas as pd
 
@@ -27,11 +28,19 @@ class Rolling(BetaCalculator):
 
 
 class Expanding(BetaCalculator):
-    def __init__(self, min_periods: int) -> None:
+    def __init__(self, min_periods: int, start_date: str | None = None) -> None:
         super().__init__()
         self._min_periods = min_periods
 
+        self._start = None
+        if start_date is not None:
+            self._start = date.fromisoformat(start_date)
+
     def calculate(self, rri: pd.Series, rrs: pd.Series) -> pd.Series:
+        if self._start is not None:
+            rri = rri[self._start :]
+            rrs = rrs[self._start :]
+
         stock_cov = rrs.expanding(self._min_periods).cov(rri)
         index_var = rri.expanding(self._min_periods).var()
 

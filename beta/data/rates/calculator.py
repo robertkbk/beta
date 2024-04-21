@@ -46,7 +46,8 @@ class Daily(RatesCalculator):
 
     def calculate(self, series: pd.Series) -> pd.Series:
         if self._fill:
-            series = series.resample("1D").ffill().where(lambda ser: ser.weekday < 5)
+            series = series.resample("1D").ffill()
+            series = series[series.index.weekday < 5]
 
         return series.rolling(2).apply(self._rate_calc).dropna()
 
