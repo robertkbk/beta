@@ -36,7 +36,7 @@ class BetaPredictor(pl.LightningModule):
         return (
             [optimizer],
             [
-                optim.lr_scheduler.StepLR(optimizer, step_size=10, gamma=0.99),
+                optim.lr_scheduler.StepLR(optimizer, step_size=25, gamma=0.99),
             ],
         )
 
