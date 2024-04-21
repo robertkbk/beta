@@ -6,12 +6,18 @@ from .dataset import BetaDataset
 
 class BetaDataModule(pl.LightningDataModule):
     def __init__(
-        self, dataset: BetaDataset, batch_size: int, shuffle: bool, split: float
+        self,
+        dataset: BetaDataset,
+        batch_size: int,
+        shuffle: bool,
+        split: float,
+        predict: int,
     ) -> None:
         super().__init__()
         self._shuffle = shuffle
         self._batch_size = batch_size
         self._split_idx = int(len(dataset) * split)
+        self._predict = predict
 
         self.dataset = dataset
 
@@ -34,4 +40,13 @@ class BetaDataModule(pl.LightningDataModule):
             dataset=self.dataset,
             batch_size=self._batch_size,
             sampler=range(self._split_idx, len(self.dataset)),
+        )
+
+    def predict_dataloader(self) -> data.DataLoader:
+        dataset_len = len(self.dataset)
+
+        return data.DataLoader(
+            dataset=self.dataset,
+            batch_size=self._batch_size,
+            sampler=range(dataset_len - self._predict, dataset_len),
         )
