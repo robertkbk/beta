@@ -47,7 +47,6 @@ class EWM(BetaCalculator):
         return f"{super().__str__()} ($\\alpha={self._alpha}$)"
 
     def calculate(self, rri: pd.Series, rrs: pd.Series) -> pd.Series:
-        stock_cov = rrs.ewm(self._alpha).cov(rri)
-        index_var = rri.ewm(self._alpha).var()
+        index_ewm = rri.ewm(alpha=self._alpha)
 
-        return (stock_cov / index_var).dropna()
+        return (index_ewm.cov(rrs) / index_ewm.var()).dropna()
