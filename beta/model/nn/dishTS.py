@@ -3,9 +3,10 @@ from torch import nn
 
 
 class DishTS(nn.Module):
-    def __init__(self, input_size: int, lookback: int) -> None:
+    def __init__(self, input_size: int, lookback: int, activate: bool = False) -> None:
         super().__init__()
 
+        self._activate = activate
         self._phil: torch.Tensor
         self._phih: torch.Tensor
 
@@ -24,13 +25,13 @@ class DishTS(nn.Module):
             self._precalc(x)
             return self._normalize(x)
 
-    def _precalc(self, x: torch.Tensor):
+    def _precalc(self, x: torch.Tensor) -> None:
         xT = x.permute(2, 0, 1)
         ts = x.shape[1] - 1
         theta = xT.bmm(self._reduce_layer).permute(1, 2, 0)
 
-        # if self.activate:
-        #     theta = F.gelu(theta)
+        if self._activate:
+            theta = nn.functional.gelu(theta)
 
         self._phil, self._phih = theta.split(1, dim=1)
         self._xil = torch.pow(x - self._phil, 2).sum(axis=1, keepdim=True) / ts
