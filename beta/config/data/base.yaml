@@ -3,6 +3,6 @@ defaults:
 
 _target_: beta.data.BetaDataModule
 batch_size: 16
-predict: 30
 shuffle: true
 split: 0.80
+test: 30
