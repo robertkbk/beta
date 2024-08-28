@@ -43,17 +43,18 @@ def main(config: Config):
 
     trainer.fit(model=predictor, datamodule=datamodule)
 
-    pred = trainer.predict(
-        model=predictor,
-        datamodule=datamodule,
-        return_predictions=True,
-        ckpt_path="best",
-    )
+    if not config.run.dev:
+        pred = trainer.predict(
+            model=predictor,
+            datamodule=datamodule,
+            return_predictions=True,
+            ckpt_path="best",
+        )
 
-    pred_figs = datamodule.dataset.plot_prediction(pred, xlabel="", figsize=(8, 6))
+        pred_figs = datamodule.dataset.plot_prediction(pred, xlabel="", figsize=(8, 6))
 
-    for i, fig in enumerate(pred_figs):
-        logger.experiment.add_figure(f"prediction/{i}", fig)
+        for i, fig in enumerate(pred_figs):
+            logger.experiment.add_figure(f"prediction/{i}", fig)
 
 
 if __name__ == "__main__":
