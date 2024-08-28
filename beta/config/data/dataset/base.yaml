@@ -1,0 +1,6 @@
+defaults:
+  - series: default
+
+_target_: beta.data.BetaDataset
+lookback: 50
+subset: 800

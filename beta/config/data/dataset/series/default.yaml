@@ -1,0 +1,17 @@
+- _target_: beta.data.BetaSeries
+  stock: dataset/daily/pl/wse stocks/ale.txt
+  index: dataset/daily/pl/wse indices/wig20.txt
+  column: <HIGH>
+
+  rates:
+    _target_: beta.data.rates.Daily
+    rate: LOG
+
+  beta:
+    _target_: beta.data.index.Rolling
+    window: 60
+
+  estimator:
+    _target_: beta.data.estimator.Blume
+    gamma: 0.684
+    phi: 0.371
