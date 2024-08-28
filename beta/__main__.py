@@ -34,8 +34,8 @@ def main(config: Config):
             ),
             callbacks.LearningRateMonitor("epoch"),
             callbacks.LearningRateFinder(min_lr=1e-6, max_lr=1e-1),
-            callbacks.TQDMProgressBar(refresh_rate=10),
         ],
+        enable_progress_bar=config.run.progress,
     )
 
     dataset_fig = datamodule.dataset.plot(xlabel="", figsize=(8, 6))
