@@ -44,7 +44,7 @@ def main(config: Config):
     trainer.fit(model=predictor, datamodule=datamodule)
 
     if not config.run.dev:
-        metrics = trainer.test(model=predictor, datamodule=datamodule, ckpt_path="best")
+        trainer.test(model=predictor, datamodule=datamodule, ckpt_path="best")
 
         pred = trainer.predict(
             model=predictor,
@@ -60,7 +60,7 @@ def main(config: Config):
 
 
 if __name__ == "__main__":
-    import scienceplots
+    import scienceplots  # noqa: F401
 
     plt.style.use(["science", "no-latex", "grid"])
     main()
