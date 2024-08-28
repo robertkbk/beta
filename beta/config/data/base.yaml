@@ -1,0 +1,8 @@
+defaults:
+  - dataset: base
+
+_target_: beta.data.BetaDataModule
+batch_size: 16
+predict: 100
+shuffle: true
+split: 0.80
