@@ -12,20 +12,25 @@ data:
   dataset:
     _target_: beta.data.BetaDataset
     lookback: 25
-    subset: null
+    subset: 800
 
     series:
       - _target_: beta.data.BetaSeries
         stock: dataset/daily/pl/wse stocks/ale.txt
         index: dataset/daily/pl/wse indices/wig.txt
-        column: <CLOSE>
+        column: <HIGH>
         rates:
           _target_: beta.data.rates.Daily
           rate: LOG
 
         beta:
-          _target_: beta.data.index.Rolling
-          window: 150
+          _target_: beta.data.index.EWM
+          alpha: 0.0025
+
+        estimator:
+          _target_: beta.data.estimator.Blume
+          gamma: 0.684
+          phi: 0.371
 
       - _target_: beta.data.BetaSeries
         stock: dataset/daily/pl/wse stocks/ale.txt

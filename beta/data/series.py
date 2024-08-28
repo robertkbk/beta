@@ -4,6 +4,7 @@ import pandas as pd
 
 from .rates import RatesCalculator
 from .index import BetaCalculator
+from .estimator import BetaEstimator
 
 _COL_DATE = "<DATE>"
 
@@ -25,6 +26,7 @@ class BetaSeries(pd.Series):
         column: str,
         rates: RatesCalculator,
         beta: BetaCalculator,
+        estimator: BetaEstimator | None = None,
     ) -> None:
         index_series = _read_series(index, column)
         index_rr = rates.calculate(index_series[column])
@@ -32,5 +34,9 @@ class BetaSeries(pd.Series):
         stock_series = _read_series(stock, column)
         stock_rr = rates.calculate(stock_series[column])
 
-        series = beta.calculate(index_rr, stock_rr)
-        super().__init__(data=series, name=f"{rates} {beta}")
+        data = beta.calculate(index_rr, stock_rr)
+
+        if estimator is not None:
+            data = estimator.estimate(data)
+
+        super().__init__(data=data, name=f"{rates} {beta}")
