@@ -42,7 +42,7 @@ class BetaDataModule(pl.LightningDataModule):
             sampler=range(self._split_idx, len(self.dataset)),
         )
 
-    def predict_dataloader(self) -> data.DataLoader:
+    def test_dataloader(self) -> data.DataLoader:
         dataset_len = len(self.dataset)
 
         return data.DataLoader(
@@ -50,3 +50,6 @@ class BetaDataModule(pl.LightningDataModule):
             batch_size=self._batch_size,
             sampler=range(dataset_len - self._predict, dataset_len),
         )
+
+    def predict_dataloader(self) -> data.DataLoader:
+        return self.test_dataloader()
