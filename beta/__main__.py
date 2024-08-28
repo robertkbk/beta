@@ -44,6 +44,8 @@ def main(config: Config):
     trainer.fit(model=predictor, datamodule=datamodule)
 
     if not config.run.dev:
+        metrics = trainer.test(model=predictor, datamodule=datamodule, ckpt_path="best")
+
         pred = trainer.predict(
             model=predictor,
             datamodule=datamodule,

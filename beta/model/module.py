@@ -27,18 +27,21 @@ class BetaPredictor(pl.LightningModule):
             },
             prefix="val/",
         )
+        self.metrics_test = torchmetrics.MetricCollection(
+            {
+                "mae": torchmetrics.MeanAbsoluteError(),
+                "mse": torchmetrics.MeanSquaredError(),
+            },
+            prefix="test/",
+        )
 
         self.model = model
 
     def configure_optimizers(self):
         optimizer = optim.AdamW(self.model.parameters(), lr=self.lr)
+        lr_scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=25, gamma=0.99)
 
-        return (
-            [optimizer],
-            [
-                optim.lr_scheduler.StepLR(optimizer, step_size=25, gamma=0.99),
-            ],
-        )
+        return [optimizer], [lr_scheduler]
 
     def training_step(self, batch: list[Tensor]) -> Tensor:
         x, y = batch
@@ -70,6 +73,16 @@ class BetaPredictor(pl.LightningModule):
     def on_validation_epoch_end(self) -> None:
         self.log_dict(self.metrics_val)
 
+    def test_step(self, batch: list[Tensor]) -> Tensor:
+        x, y = batch
+        pred = self.model.forward(x)
+
+        self.metrics_test.update(pred[:, -1], y[:, -1])
+        self.log_dict(self.metrics_test)
+
+        return pred[:, -1]
+
     def predict_step(self, batch: list[Tensor]) -> Tensor:
-        pred = self.model.forward(batch[0])
+        x, _ = batch
+        pred = self.model.forward(x)
         return pred[:, -1]
