@@ -2,5 +2,5 @@ defaults:
   - series: default
 
 _target_: beta.data.BetaDataset
-lookback: 50
-subset: 800
+lookback: ${experiment.lookback}
+subset: ${experiment.subset}
