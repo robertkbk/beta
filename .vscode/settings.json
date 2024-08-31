@@ -1,7 +1,10 @@
 {
   "editor.formatOnSave": true,
+
   "python.analysis.autoImportCompletions": true,
   "python.analysis.typeCheckingMode": "off",
   "python.analysis.completeFunctionParens": true,
+  "python.analysis.exclude": [ "**/__pycache__", "logs", "dataset", ".vscode", ".git", "outputs" ],
+
   "jupyter.notebookFileRoot": "."
 }
