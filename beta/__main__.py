@@ -12,7 +12,9 @@ from .model.module import BetaPredictor
 def main(config: Config):
     datamodule: BetaDataModule = hydra.utils.instantiate(config=config.data)
     predictor: BetaPredictor = hydra.utils.instantiate(config=config.predictor)
-    logger = loggers.TensorBoardLogger(save_dir="logs", name="beta")
+    logger = loggers.TensorBoardLogger(
+        save_dir="logs", name="beta", sub_dir=config.run.name
+    )
 
     trainer = pl.Trainer(
         logger=logger,

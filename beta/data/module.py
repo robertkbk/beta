@@ -18,7 +18,7 @@ class BetaDataModule(pl.LightningDataModule):
         super().__init__()
         self._shuffle = shuffle
         self._batch_size = batch_size
-        self._split_idx = int((len(dataset) - test) * split)
+        self._val_split = split
         self._test = test
 
         self.dataset = dataset
@@ -54,11 +54,15 @@ class BetaDataModule(pl.LightningDataModule):
     def predict_dataloader(self) -> data.DataLoader:
         return self.test_dataloader()
 
+    @property
+    def _test_split(self) -> int:
+        return len(self.dataset) - self._test
+
     def _train_indices(self) -> Sequence[int]:
-        return [*range(self._split_idx)]
+        return [*range(self._test_split)]
 
     def _val_indices(self) -> Sequence[int]:
-        return [*range(self._split_idx, len(self.dataset) - self._test)]
+        return [*range(int(self._test_split * self._val_split), self._test_split)]
 
     def _test_indices(self) -> Sequence[int]:
-        return [*range(len(self.dataset) - self._test, len(self.dataset))]
+        return [*range(self._test_split, len(self.dataset))]

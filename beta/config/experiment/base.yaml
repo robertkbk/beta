@@ -1,0 +1,7 @@
+subset: 500
+lookback: 30
+batch_size: 16
+
+hidden_size: 32
+num_layers: 4
+dropout: 0.02

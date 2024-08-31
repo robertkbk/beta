@@ -2,9 +2,9 @@ from pathlib import Path
 
 import pandas as pd
 
-from .rates import RatesCalculator
-from .index import BetaCalculator
 from .estimator import BetaEstimator
+from .index import BetaCalculator
+from .rates import RatesCalculator
 
 _COL_DATE = "<DATE>"
 

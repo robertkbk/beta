@@ -163,6 +163,7 @@ cython_debug/
 share/
 Scripts/
 outputs/
+multirun/
 lightning_logs/
 mlruns/
 logs/
