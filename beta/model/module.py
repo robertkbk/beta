@@ -12,7 +12,7 @@ class BetaPredictor(pl.LightningModule):
         self.loss = nn.SmoothL1Loss()
         self.metrics_train = torchmetrics.MetricCollection(
             {
-                "mse": torchmetrics.MeanSquaredError(),
+                "rmse": torchmetrics.MeanSquaredError(),
                 "mape": torchmetrics.MeanAbsolutePercentageError(),
             },
             prefix="train/",
@@ -20,17 +20,16 @@ class BetaPredictor(pl.LightningModule):
         self.metrics_val = torchmetrics.MetricCollection(
             {
                 "mae": torchmetrics.MeanAbsoluteError(),
-                "mse": torchmetrics.MeanSquaredError(),
+                "rmse": torchmetrics.MeanSquaredError(),
                 "mape": torchmetrics.MeanAbsolutePercentageError(),
                 "smape": torchmetrics.SymmetricMeanAbsolutePercentageError(),
-                "wmape": torchmetrics.WeightedMeanAbsolutePercentageError(),
             },
             prefix="val/",
         )
         self.metrics_test = torchmetrics.MetricCollection(
             {
                 "mae": torchmetrics.MeanAbsoluteError(),
-                "mse": torchmetrics.MeanSquaredError(),
+                "rmse": torchmetrics.MeanSquaredError(),
             },
             prefix="test/",
         )
