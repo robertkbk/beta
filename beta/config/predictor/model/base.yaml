@@ -1,0 +1,6 @@
+_target_: beta.model.nn.BetaModel
+input_size: ${len:${data.dataset.series}}
+lookback: ${data.dataset.lookback}
+hidden_size: ${experiment.parameters.hidden_size}
+num_layers: ${experiment.parameters.num_layers}
+dropout: ${experiment.parameters.dropout}

@@ -7,6 +7,10 @@ class BetaEstimator(abc.ABC):
     @abc.abstractmethod
     def estimate(beta: pd.Series) -> pd.Series: ...
 
+    @property
+    @abc.abstractmethod
+    def superscript(self) -> str: ...
+
 
 class Blume(BetaEstimator):
     def __init__(self, gamma: float, phi: float) -> None:
@@ -16,3 +20,7 @@ class Blume(BetaEstimator):
 
     def estimate(self, beta: pd.Series) -> pd.Series:
         return self._gamma + self._phi * beta
+
+    @property
+    def superscript(self) -> str:
+        return "B"

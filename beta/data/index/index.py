@@ -11,6 +11,10 @@ class BetaCalculator(abc.ABC):
     @abc.abstractmethod
     def calculate(rri: pd.Series, rrs: pd.Series) -> pd.Series: ...
 
+    @property
+    @abc.abstractmethod
+    def subscript() -> str: ...
+
 
 class Rolling(BetaCalculator):
     def __init__(self, window: int) -> None:
@@ -25,6 +29,10 @@ class Rolling(BetaCalculator):
         index_var = rri.rolling(self._window).var()
 
         return (stock_cov / index_var).dropna()
+
+    @property
+    def subscript(self) -> str:
+        return f"w={self._window}"
 
 
 class Expanding(BetaCalculator):
@@ -46,6 +54,10 @@ class Expanding(BetaCalculator):
 
         return (stock_cov / index_var).dropna()
 
+    @property
+    def subscript(self) -> str:
+        return ""
+
 
 class EWM(BetaCalculator):
     def __init__(self, alpha: float) -> None:
@@ -59,3 +71,7 @@ class EWM(BetaCalculator):
         index_ewm = rri.ewm(alpha=self._alpha)
 
         return (index_ewm.cov(rrs) / index_ewm.var()).dropna()
+
+    @property
+    def subscript(self) -> str:
+        return f"\\alpha={self._alpha}"

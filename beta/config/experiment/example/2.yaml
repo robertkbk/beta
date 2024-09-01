@@ -1,3 +1,4 @@
 #@package _global_
 defaults:
   - base@experiment
+  - override /data/dataset/series: wig

@@ -13,15 +13,18 @@ def main(config: Config):
     datamodule: BetaDataModule = hydra.utils.instantiate(config=config.data)
     predictor: BetaPredictor = hydra.utils.instantiate(config=config.predictor)
     logger = loggers.TensorBoardLogger(
-        save_dir="logs", name="beta", sub_dir=config.run.name
+        save_dir="logs",
+        name=config.experiment.name,
+        version=config.experiment.version,
+        sub_dir=config.experiment.sub_dir,
     )
 
     trainer = pl.Trainer(
         logger=logger,
         check_val_every_n_epoch=5,
-        fast_dev_run=config.run.dev,
-        min_epochs=config.run.min_epochs,
-        max_epochs=config.run.max_epochs,
+        fast_dev_run=config.experiment.dev,
+        min_epochs=config.experiment.min_epochs,
+        max_epochs=config.experiment.max_epochs,
         callbacks=[
             callbacks.EarlyStopping(
                 monitor="val/loss",
@@ -37,7 +40,7 @@ def main(config: Config):
             callbacks.LearningRateMonitor("epoch"),
             callbacks.LearningRateFinder(min_lr=1e-6, max_lr=1e-1),
         ],
-        enable_progress_bar=config.run.progress,
+        enable_progress_bar=config.experiment.progress,
     )
 
     dataset_fig = datamodule.dataset.plot(xlabel="", figsize=(8, 6))
@@ -45,7 +48,7 @@ def main(config: Config):
 
     trainer.fit(model=predictor, datamodule=datamodule)
 
-    if not config.run.dev:
+    if not config.experiment.dev:
         trainer.test(model=predictor, datamodule=datamodule, ckpt_path="best")
 
         pred = trainer.predict(
@@ -56,7 +59,6 @@ def main(config: Config):
         )
 
         pred_figs = datamodule.dataset.plot_prediction(pred, xlabel="", figsize=(8, 6))
-
         for i, fig in enumerate(pred_figs):
             logger.experiment.add_figure(f"prediction/{i}", fig)
 
