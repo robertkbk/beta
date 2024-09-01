@@ -1,7 +1,7 @@
 import hydra
 import lightning as pl
 import matplotlib.pyplot as plt
-from lightning.pytorch import callbacks, loggers
+from lightning.pytorch import callbacks, loggers, seed_everything
 
 from .config import Config
 from .data.module import BetaDataModule
@@ -10,6 +10,9 @@ from .model.module import BetaPredictor
 
 @hydra.main(config_path="config", config_name="config", version_base=None)
 def main(config: Config):
+    if config.experiment.seed is not None:
+        seed_everything(seed=config.experiment.seed, workers=True)
+
     datamodule: BetaDataModule = hydra.utils.instantiate(config=config.data)
     predictor: BetaPredictor = hydra.utils.instantiate(config=config.predictor)
     logger = loggers.TensorBoardLogger(
@@ -22,6 +25,7 @@ def main(config: Config):
     trainer = pl.Trainer(
         logger=logger,
         check_val_every_n_epoch=5,
+        deterministic=config.experiment.seed is not None,
         fast_dev_run=config.experiment.dev,
         min_epochs=config.experiment.min_epochs,
         max_epochs=config.experiment.max_epochs,

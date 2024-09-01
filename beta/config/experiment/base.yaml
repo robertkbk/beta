@@ -6,6 +6,7 @@ dev: false
 progress: false
 min_epochs: 150
 max_epochs: 1500
+seed: 2137
 
 parameters:
   subset: 500
