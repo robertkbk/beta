@@ -53,7 +53,7 @@ def main(config: Config):
     trainer.fit(model=predictor, datamodule=datamodule)
 
     if not config.experiment.dev:
-        trainer.test(model=predictor, datamodule=datamodule, ckpt_path="best")
+        metrics = trainer.test(model=predictor, datamodule=datamodule, ckpt_path="best")
 
         pred = trainer.predict(
             model=predictor,
@@ -65,6 +65,8 @@ def main(config: Config):
         pred_figs = datamodule.dataset.plot_prediction(pred, xlabel="", figsize=(8, 6))
         for i, fig in enumerate(pred_figs):
             logger.experiment.add_figure(f"prediction/{i}", fig)
+
+        return metrics[0]["test/rmse"]
 
 
 if __name__ == "__main__":
