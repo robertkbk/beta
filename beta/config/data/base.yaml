@@ -2,7 +2,7 @@ defaults:
   - dataset: base
 
 _target_: beta.data.BetaDataModule
-batch_size: ${experiment.batch_size}
+batch_size: ${experiment.parameters.batch_size}
 shuffle: true
 split: 0.80
 test: 30

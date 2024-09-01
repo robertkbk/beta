@@ -2,22 +2,5 @@ defaults:
   - _self_
   - beta
   - data: base
-
-predictor:
-  _target_: beta.model.BetaPredictor
-  lr: 0.0001
-
-  model:
-    _target_: beta.model.nn.BetaModel
-    input_size: ${len:${data.dataset.series}}
-    lookback: ${data.dataset.lookback}
-    hidden_size: ${experiment.hidden_size}
-    num_layers: ${experiment.num_layers}
-    dropout: ${experiment.dropout}
-
-run:
-  dev: false
-  name: ${name:${data.dataset.series[0].stock}}-${name:${data.dataset.series[0].index}}
-  progress: false
-  min_epochs: 150
-  max_epochs: 1500
+  - experiment: base
+  - predictor: base

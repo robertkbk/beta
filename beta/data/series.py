@@ -39,4 +39,18 @@ class BetaSeries(pd.Series):
         if estimator is not None:
             data = estimator.estimate(data)
 
-        super().__init__(data=data, name=f"{rates} {beta}")
+        super().__init__(data=data, name=self._generate_label(beta, estimator))
+
+    @staticmethod
+    def _generate_label(
+        beta: BetaCalculator,
+        estimator: BetaEstimator | None,
+    ):
+        label = f"\\beta_{{{beta.subscript}}}"
+        if estimator is not None:
+            label += f"^{{{estimator.superscript}}}"
+
+        return f"${label}$"
+
+    def __str__(self) -> str:
+        return "beta-series"

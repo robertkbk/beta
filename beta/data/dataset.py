@@ -46,7 +46,7 @@ class BetaDataset(Dataset):
     ) -> pd.DataFrame:
         y = self.series.iloc[:, column][-pred_len:]
         pred = pd.Series(
-            data=data, index=self.series.index[-pred_len:], name="Prediction"
+            data=data, index=self.series.index[-pred_len:], name=f"$\\hat{y.name[1:]}"
         )
 
         return pd.concat([y, pred], axis=1)

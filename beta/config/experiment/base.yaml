@@ -1,7 +1,16 @@
-subset: 500
-lookback: 30
-batch_size: 16
+name: beta
+version: null
+sub_dir: null
 
-hidden_size: 32
-num_layers: 4
-dropout: 0.02
+dev: false
+progress: false
+min_epochs: 150
+max_epochs: 1500
+
+parameters:
+  subset: 500
+  lookback: 30
+  batch_size: 16
+  hidden_size: 32
+  num_layers: 4
+  dropout: 0.02
