@@ -1,0 +1,13 @@
+#@package _global_
+defaults:
+  - base@experiment
+
+hydra:
+  sweeper:
+    params:
+      experiment.parameters.subset: 200,300,400,500,600,700,800,null
+
+experiment:
+  name: subset
+  version: ${name:${data.dataset.series[0].stock}}-${name:${data.dataset.series[0].index}}
+  sub_dir: batch-size-${experiment.parameters.subset}

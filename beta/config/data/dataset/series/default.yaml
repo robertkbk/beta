@@ -9,7 +9,7 @@
 
   beta:
     _target_: beta.data.index.Rolling
-    window: 60
+    window: 90
 
   estimator:
     _target_: beta.data.estimator.Blume

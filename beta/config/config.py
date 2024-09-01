@@ -24,6 +24,7 @@ class Experiment:
     dev: bool
     name: str
     version: str | None
+    seed: int | None
     sub_dir: str | None
     min_epochs: int
     max_epochs: int
