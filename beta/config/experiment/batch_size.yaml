@@ -5,7 +5,7 @@ defaults:
 hydra:
   sweeper:
     params:
-      experiment.parameters.batch_size: 8,16,24,32
+      experiment.parameters.batch_size: 8,16,24,32,48
 
 experiment:
   name: batch-size

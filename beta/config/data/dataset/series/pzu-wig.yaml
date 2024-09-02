@@ -1,0 +1,12 @@
+- _target_: beta.data.BetaSeries
+  stock: dataset/daily/pl/wse stocks/pzu.txt
+  index: dataset/daily/pl/wse indices/wig.txt
+  column: <CLOSE>
+
+  rates:
+    _target_: beta.data.rates.InterWeekly
+    rate: SIMPLE
+
+  beta:
+    _target_: beta.data.index.Expanding
+    min_periods: 100

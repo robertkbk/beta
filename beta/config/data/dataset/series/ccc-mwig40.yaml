@@ -1,0 +1,17 @@
+- _target_: beta.data.BetaSeries
+  stock: dataset/daily/pl/wse stocks/ccc.txt
+  index: dataset/daily/pl/wse indices/mwig40.txt
+  column: <HIGH>
+
+  rates:
+    _target_: beta.data.rates.Daily
+    rate: LOG
+
+  beta:
+    _target_: beta.data.index.EWM
+    alpha: 0.005
+
+  estimator:
+    _target_: beta.data.estimator.Blume
+    gamma: 0.666
+    phi: 0.333

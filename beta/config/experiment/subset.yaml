@@ -5,7 +5,8 @@ defaults:
 hydra:
   sweeper:
     params:
-      experiment.parameters.subset: 200,300,400,500,600,700,800,null
+      experiment.parameters.subset: 300,600,900,null
+      data/dataset/series: ale-wig20,ccc-mwig40,pzu-wig
 
 experiment:
   name: subset

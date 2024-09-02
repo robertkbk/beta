@@ -33,7 +33,7 @@ def main(config: Config):
             callbacks.EarlyStopping(
                 monitor="val/loss",
                 mode="min",
-                patience=10,
+                patience=5,
             ),
             callbacks.ModelCheckpoint(
                 "logs/model",
