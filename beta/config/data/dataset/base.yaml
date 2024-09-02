@@ -1,5 +1,5 @@
 defaults:
-  - series: default
+  - series: ale-wig20
 
 _target_: beta.data.BetaDataset
 lookback: ${experiment.parameters.lookback}
