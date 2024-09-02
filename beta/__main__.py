@@ -37,7 +37,7 @@ def main(config: Config):
             ),
             callbacks.ModelCheckpoint(
                 "logs/model",
-                filename="beta",
+                filename=f"beta-{config.experiment.name}-{config.experiment.version}-{config.experiment.sub_dir}",
                 monitor="val/loss",
                 save_weights_only=True,
             ),
