@@ -11,7 +11,7 @@ seed: 2137
 parameters:
   subset: 500
   lookback: 30
-  batch_size: 16
+  batch_size: 48
   hidden_size: 32
   num_layers: 4
   dropout: 0.02
