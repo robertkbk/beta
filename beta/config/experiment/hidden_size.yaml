@@ -1,0 +1,17 @@
+#@package _global_
+defaults:
+  - base@experiment
+
+hydra:
+  sweeper:
+    params:
+      experiment.parameters.hidden_size: 16,32,48,64,96
+      data/dataset/series: ale-wig20,ccc-mwig40,pzu-wig
+
+experiment:
+  name: hidden-size
+  version: ${name:${data.dataset.series[0].stock}}-${name:${data.dataset.series[0].index}}
+  sub_dir: ${experiment.parameters.hidden_size}
+
+  parameters:
+    subset: 2000

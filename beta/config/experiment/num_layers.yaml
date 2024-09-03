@@ -1,0 +1,18 @@
+#@package _global_
+defaults:
+  - base@experiment
+
+hydra:
+  sweeper:
+    params:
+      experiment.parameters.num_layers: 8,12,16
+      data/dataset/series: ale-wig20,ccc-mwig40,pzu-wig
+
+experiment:
+  name: num-layers
+  version: ${name:${data.dataset.series[0].stock}}-${name:${data.dataset.series[0].index}}
+  sub_dir: H-32-${experiment.parameters.num_layers}
+
+  parameters:
+    subset: 2000
+    hidden_size: 32

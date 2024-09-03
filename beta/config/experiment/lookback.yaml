@@ -1,0 +1,18 @@
+#@package _global_
+defaults:
+  - base@experiment
+
+hydra:
+  sweeper:
+    params:
+      experiment.parameters.lookback: 10,20,30,40,50
+      data/dataset/series: ale-wig20,ccc-mwig40,pzu-wig
+
+experiment:
+  name: lookback
+  version: ${name:${data.dataset.series[0].stock}}-${name:${data.dataset.series[0].index}}
+  sub_dir: ${experiment.parameters.lookback}
+
+  parameters:
+    subset: 2000
+    hidden_size: 96
