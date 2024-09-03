@@ -10,8 +10,8 @@ hydra:
     n_trials: 64
     n_jobs: 1
     params:
-      experiment.parameters.subset: choice(600, 700, 800)
-      experiment.parameters.lookback: range(25, 75)
+      experiment.parameters.subset: choice(600, 900, null)
+      experiment.parameters.lookback: range(10, 15, 20)
       experiment.parameters.hidden_size: range(16, 64)
       experiment.parameters.dropout: choice(0.0, 0.01, 0.02, 0.05, 0.1, 0.15, 0.2)
 

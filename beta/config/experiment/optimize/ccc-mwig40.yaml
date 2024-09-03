@@ -1,0 +1,22 @@
+#@package _global_
+defaults:
+  - base@experiment
+  - override /data/dataset/series: ccc-mwig40
+
+hydra:
+  sweeper:
+    sampler:
+      seed: 2137
+    direction: minimize
+    n_trials: 64
+    n_jobs: 2
+    params:
+      experiment.parameters.subset: choice(1500, 1750, 2000, 2250, 2500, 4800)
+      experiment.parameters.lookback: range(20, 60)
+      experiment.parameters.hidden_size: choice(64, 80, 96, 112, 128)
+      experiment.parameters.num_layers: range(1, 9)
+
+experiment:
+  name: optimize
+  version: ${name:${data.dataset.series[0].stock}}-${name:${data.dataset.series[0].index}}
+  sub_dir: s-${experiment.parameters.subset}-l-${experiment.parameters.lookback}-h-${experiment.parameters.hidden_size}-n-${experiment.parameters.num_layers}
