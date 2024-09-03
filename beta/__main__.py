@@ -66,7 +66,7 @@ def main(config: Config):
         for i, fig in enumerate(pred_figs):
             logger.experiment.add_figure(f"prediction/{i}", fig)
 
-        return metrics[0]["test/rmse"]
+        return metrics[0]["test/mae"]
 
 
 if __name__ == "__main__":
